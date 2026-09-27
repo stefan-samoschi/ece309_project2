@@ -3,15 +3,15 @@
 (500–800 words total. See spec §5 for what each section must cover.)
 
 ## Growth factor and amortized cost
-
-
+The "Conversation" file begins with data_ being checks if its a nullpttr, and the size_ and capacity_ variables check whether they are equal to 0, this means that an empty conversation will have no allocation. When append() finds the array is full, it will allocate a new array. The first allocation has capacity 1 and then after that it doubles it every other time from 1 to 2 to 4, etc. It copies all the existing messages into the new array, adds the new message, and releases the old array. It then changes size_ only if and after the insertion is successful.
+If the insertion does not require growth, it performs one message assignemnt. A growth of from capacity 'k' will copy all 'k' messages and across 'n' appends, those growth copies occur at the capacities mentioned above (1, 2, 4, etc.) up to a power of two smaller than 'n'. Their sum will be less than '2n' and adding the 'n' insertions gives a total number of messages proportional to 'n'. Due to all that, the container cost is O(1) amortized despite one single append that grows the array being O(n). The growth test that I have will append 65 messages and will check whether their contents and order after a couple reallocations to make sure everything works as expected.
 
 ## Rule of Five evidence
-
-
+The "Conversation" has its own "Message" array. Its destructor uses delete[] which is safe even when data_ is null. The copy constructor allocates a different array and copies every single message into it. If the copying fails, it will delete the new created array and try again. The copy assignment first makes a temporary copy, then swaps its pointer, size, and capacity with the destination array. If the copying fails, the original array is not changed. When the temporary array is destroyed, it will release the destinations old array. The move constructor takes the source array pointer and leaves the source with a nullptr, 0 size and capacity. The move assignment will first delete the destinations old array and take the sources fields the same way as teh move constructor. The tests check that different copies have different begin() addresses while the moves will transfer the original address. They also check that the objects they moved from are now empty.
 
 ## Sentinel scanner: bounded pending_ proof
-
+The scanner keeps the characters un pending_ only if the senteniel senses that they may be the start of it. It then prints out characters when they can no longer be a part of a match. For example, for a sentinel length n, a pending_ that doesn't have matched characters can hold a maximum of n-1 charcters. If its a full match it would be cleared immediately. This keeps the memory usage low, around O(n) even if the reply is super long. However, if the input stream is super long and it ends without a match, flush() will print out the remainder of the characters.
 
 
 ## What I would change differently
+In this case, the sentinel only has to check over a short conversation so when its repeatdly comparing the pending prefix its not too much work. However, if the interface had to support a much longer conversation, I would need to come up with a different solution to support it. I would also add clearer comments to my work as I realized I did not do too much documenting as I was writing my functions as well as give the test cases more descriptive names to make failures easier to identify.
