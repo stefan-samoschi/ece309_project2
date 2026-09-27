@@ -35,3 +35,9 @@ Try it once your `Conversation` and `SentinelScanner` compile:
 ```
 
 Press Ctrl-D on an empty line to end the conversation early.
+
+## Project 2 implementation
+
+I implemented `Message`, a growable `Conversation` array with deep-copy and move behavior, and a `SentinelScanner` that detects the stop marker across streamed chunks. I also wrote 17 assert-based tests covering memory ownership, array growth, sentinel handling, harness stop reasons, and transcript replay. The supplied harness, model clients, and CLI remain unchanged.
+
+Build with `cmake -S . -B build && cmake --build build`, then run `./build/test_p2`. The tests return silently when they pass. Design decisions and complexity arguments are in `docs/design-log-p2.md`.
